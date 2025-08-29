@@ -1,4 +1,5 @@
-from grade import *
+from grade import GradeFactory
+from weekday import WeekdayFactory
 
 
 class AttendanceManager:
@@ -11,8 +12,17 @@ class AttendanceManager:
         self.total_points = [0] * 100
         self.grade = [0] * 100
         self.names = [''] * 100
-        self.wednesday_attendance_count = [0] * 100
+        self.training_attendance_count = [0] * 100
         self.weekend_attendance_count = [0] * 100
+
+        self.point_table = []
+        self.point_table.append(WeekdayFactory.create_weekday("monday"))
+        self.point_table.append(WeekdayFactory.create_weekday("tuesday"))
+        self.point_table.append(WeekdayFactory.create_weekday("wednesday"))
+        self.point_table.append(WeekdayFactory.create_weekday("thursday"))
+        self.point_table.append(WeekdayFactory.create_weekday("friday"))
+        self.point_table.append(WeekdayFactory.create_weekday("saturday"))
+        self.point_table.append(WeekdayFactory.create_weekday("sunday"))
 
         self.grade_table = []
         self.grade_table.append(GradeFactory.create_grade("GOLD"))
@@ -31,30 +41,16 @@ class AttendanceManager:
     def calculate_points(self, curr_player_id, input_day_of_the_week):
         add_point = 0
         day_of_the_week_index = 0
-        if input_day_of_the_week == "monday":
-            day_of_the_week_index = 0
-            add_point += 1
-        elif input_day_of_the_week == "tuesday":
-            day_of_the_week_index = 1
-            add_point += 1
-        elif input_day_of_the_week == "wednesday":
-            day_of_the_week_index = 2
-            add_point += 3
-            self.wednesday_attendance_count[curr_player_id] += 1
-        elif input_day_of_the_week == "thursday":
-            day_of_the_week_index = 3
-            add_point += 1
-        elif input_day_of_the_week == "friday":
-            day_of_the_week_index = 4
-            add_point += 1
-        elif input_day_of_the_week == "saturday":
-            day_of_the_week_index = 5
-            add_point += 2
-            self.weekend_attendance_count[curr_player_id] += 1
-        elif input_day_of_the_week == "sunday":
-            day_of_the_week_index = 6
-            add_point += 2
-            self.weekend_attendance_count[curr_player_id] += 1
+        for x in self.point_table:
+            if input_day_of_the_week == x.day_of_the_week:
+                day_of_the_week_index = x.index
+                add_point += x.point
+                if x.is_training_day:
+                    self.training_attendance_count[curr_player_id] += 1
+                if x.is_weekend:
+                    self.weekend_attendance_count[curr_player_id] += 1
+                break
+
         self.attendance_point_rawdata[curr_player_id][day_of_the_week_index] += 1
         self.total_points[curr_player_id] += add_point
 
@@ -108,7 +104,7 @@ class AttendanceManager:
         print("\nRemoved player")
         print("==============")
         for i in range(1, self.id_count + 1):
-            if self.grade[i] not in (1, 2) and self.wednesday_attendance_count[i] == 0 and self.weekend_attendance_count[i] == 0:
+            if self.grade[i] not in (1, 2) and self.training_attendance_count[i] == 0 and self.weekend_attendance_count[i] == 0:
                 print(self.names[i])
 
 
