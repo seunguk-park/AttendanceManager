@@ -16,7 +16,7 @@ break문과 __main__ 함수 내부 코드가 제외됨
   
 <img width="741" height="361" alt="스크린샷 2025-08-29 153353" src="https://github.com/user-attachments/assets/ee077951-3117-4910-a293-e96b3a202da5" />
   
-<img width="712" height="244" alt="스크린샷 2025-08-29 153425" src="https://github.com/user-attachments/assets/7253c80a-eacf-4c49-88ab-a44885b655e7" 
+<img width="712" height="244" alt="스크린샷 2025-08-29 153425" src="https://github.com/user-attachments/assets/7253c80a-eacf-4c49-88ab-a44885b655e7" />
 
   
 ## grade.py
