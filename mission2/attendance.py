@@ -1,4 +1,4 @@
-
+from grade import *
 
 
 class AttendanceManager:
@@ -13,6 +13,12 @@ class AttendanceManager:
         self.names = [''] * 100
         self.wednesday_attendance_count = [0] * 100
         self.weekend_attendance_count = [0] * 100
+
+        self.grade_table = []
+        self.grade_table.append(GradeFactory.create_grade("GOLD"))
+        self.grade_table.append(GradeFactory.create_grade("SILVER"))
+        self.grade_table.append(GradeFactory.create_grade("NORMAL"))
+
 
     def process_input_data(self, input_name, input_day_of_the_week):
         if input_name not in self.player_id_list:
@@ -82,24 +88,20 @@ class AttendanceManager:
 
 
     def update_grade(self):
+        self.grade_table.sort(key=lambda x: -x.cut_line)
         for i in range(1, self.id_count + 1):
-            if self.total_points[i] >= 50:
-                self.grade[i] = 1
-            elif self.total_points[i] >= 30:
-                self.grade[i] = 2
-            else:
-                self.grade[i] = 0
-
+            for x in self.grade_table:
+                if self.total_points[i] >= x.cut_line:
+                    self.grade[i] = x.key
+                    break
 
     def print_points_and_grade(self):
+        #self.grade_table.sort(key=lambda x: x.key)
         for i in range(1, self.id_count + 1):
             print(f"NAME : {self.names[i]}, POINT : {self.total_points[i]}, GRADE : ", end="")
-            if self.grade[i] == 1:
-                print("GOLD")
-            elif self.grade[i] == 2:
-                print("SILVER")
-            else:
-                print("NORMAL")
+            for x in self.grade_table:
+                if self.grade[i] == x.key:
+                    print(x.name)
 
 
     def print_removed_player(self):
